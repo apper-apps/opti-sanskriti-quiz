@@ -5,9 +5,9 @@ import { cn } from "@/utils/cn"
 import { getCurrentWeek, getSanskritBlessing } from "@/utils/dateHelpers"
 import ApperIcon from "@/components/ApperIcon"
 import Button from "@/components/atoms/Button"
-import { AuthContext } from '@/App'
+// Authentication handled by backend - no auth context needed
 const Header = () => {
-  const { logout } = useContext(AuthContext)
+// No logout functionality needed - backend manages authentication
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
   const currentWeek = getCurrentWeek()
@@ -63,15 +63,7 @@ const Header = () => {
             ))}
             
             {/* Logout Button */}
-            <Button
-              onClick={logout}
-              variant="ghost"
-              size="sm"
-              className="flex items-center space-x-2 text-saddle-brown hover:text-saffron"
-            >
-              <ApperIcon name="LogOut" className="w-5 h-5" />
-              <span>Logout</span>
-            </Button>
+{/* Authentication managed by backend - no logout button needed */}
           </nav>
           
           {/* Sanskrit Blessing (Desktop) */}
@@ -139,23 +131,7 @@ const Header = () => {
                   </motion.div>
                 ))}
                 
-                {/* Mobile Logout Button */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navigationItems.length * 0.1 }}
-                >
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      logout()
-                    }}
-                    className="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium font-hind transition-all duration-200 text-saddle-brown hover:bg-cornsilk/50 hover:text-saffron w-full"
-                  >
-                    <ApperIcon name="LogOut" className="w-6 h-6" />
-                    <span className="text-lg">Logout</span>
-                  </button>
-                </motion.div>
+{/* Authentication handled by backend - no mobile logout needed */}
               </nav>
               
               {/* Mobile Week Info */}

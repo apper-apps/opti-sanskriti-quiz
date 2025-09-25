@@ -12,10 +12,10 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       // CRITICAL: Always use deep cloning to avoid reference issues
       // This prevents potential issues with object mutations
-      state.user = JSON.parse(JSON.stringify(action.payload))
+state.user = action.payload
       state.isAuthenticated = !!action.payload
     },
-    clearUser: (state) => {
+clearUser: (state) => {
       state.user = null
       state.isAuthenticated = false
     },
