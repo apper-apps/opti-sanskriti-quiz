@@ -1,0 +1,82 @@
+[
+  {
+    "Id": 1,
+    "user_id": 1,
+    "user_name": "Arjun Sharma",
+    "score": 9,
+    "time_taken": 240,
+    "quiz_date": "2024-01-20T10:30:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 2,
+    "user_id": 2,
+    "user_name": "Priya Gupta",
+    "score": 8,
+    "time_taken": 195,
+    "quiz_date": "2024-01-20T14:20:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 3,
+    "user_id": 3,
+    "user_name": "Rahul Singh",
+    "score": 10,
+    "time_taken": 280,
+    "quiz_date": "2024-01-21T09:15:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 4,
+    "user_name": "Meera Patel",
+    "user_id": 4,
+    "score": 7,
+    "time_taken": 156,
+    "quiz_date": "2024-01-21T16:45:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 5,
+    "user_id": 5,
+    "user_name": "Vikram Kumar",
+    "score": 8,
+    "time_taken": 215,
+    "quiz_date": "2024-01-22T11:30:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 6,
+    "user_id": 1,
+    "user_name": "Arjun Sharma",
+    "score": 6,
+    "time_taken": 178,
+    "quiz_date": "2024-01-22T15:20:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 7,
+    "user_id": 2,
+    "user_name": "Priya Gupta",
+    "score": 9,
+    "time_taken": 225,
+    "quiz_date": "2024-01-23T12:10:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  },
+  {
+    "Id": 8,
+    "user_id": 3,
+    "user_name": "Rahul Singh",
+    "score": 5,
+    "time_taken": 298,
+    "quiz_date": "2024-01-23T18:30:00Z",
+    "week_number": 3,
+    "total_questions": 10
+  }
+]

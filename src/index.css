@@ -1,0 +1,121 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Hind', sans-serif;
+  background: linear-gradient(135deg, #FFFAF0 0%, #FFF8DC 100%);
+  min-height: 100vh;
+}
+
+.ornate-border {
+  background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M50 10c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10z' fill='%23FFD700'/%3e%3cpath d='M20 20c-2.75 0-5 2.25-5 5s2.25 5 5 5 5-2.25 5-5-2.25-5-5-5zM80 20c-2.75 0-5 2.25-5 5s2.25 5 5 5 5-2.25 5-5-2.25-5-5-5z' fill='%23FF6B35'/%3e%3c/svg%3e");
+  background-size: 40px 40px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+/* Toast Styling */
+.Toastify__toast-container {
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  background: linear-gradient(135deg, #FFF8DC 0%, #FFFAF0 100%);
+  color: #8B4513;
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  font-family: 'Hind', sans-serif;
+  font-weight: 500;
+  min-height: 60px;
+}
+
+.Toastify__toast--success {
+  border-color: #228B22;
+  background: linear-gradient(135deg, #f0fff4 0%, #f5fffa 100%);
+}
+
+.Toastify__toast--error {
+  border-color: #DC143C;
+  background: linear-gradient(135deg, #fff5f5 0%, #fffafa 100%);
+}
+
+.Toastify__progress-bar {
+  background: linear-gradient(90deg, #FF6B35 0%, #FFD700 100%);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFAF0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF6B35 0%, #FFD700 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FFD700 0%, #FF6B35 100%);
+}
+
+/* Sanskrit Text Styling */
+.sanskrit-text {
+  font-family: 'Vesper Libre', serif;
+  font-weight: 500;
+  color: #8B4513;
+  text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
+}
+
+/* Ornamental decorations */
+.paisley-decoration::before {
+  content: "❋";
+  color: #FFD700;
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.paisley-decoration::after {
+  content: "❋";
+  color: #FFD700;
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+}
+
+/* Certificate background pattern */
+.certificate-bg {
+  background-image: radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                    linear-gradient(135deg, #FFFAF0 0%, #FFF8DC 100%);
+}
+
+/* Lotus pattern */
+.lotus-pattern {
+  background-image: url("data:image/svg+xml,%3csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23FFD700' opacity='0.1'%3e%3cpath d='M30 5c-3 8-8 15-15 20 7-5 12-12 15-20z'/%3e%3cpath d='M30 5c3 8 8 15 15 20-7-5-12-12-15-20z'/%3e%3cpath d='M30 55c-3-8-8-15-15-20 7 5 12 12 15 20z'/%3e%3cpath d='M30 55c3-8 8-15 15-20-7 5-12 12 15 20z'/%3e%3c/g%3e%3c/svg%3e");
+  background-repeat: repeat;
+  background-position: center;
+}
+
+/* Timer glow effect */
+.timer-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.timer-urgent {
+  animation: pulse-glow 0.5s ease-in-out infinite;
+  color: #DC143C;
+}
+
+/* Indian border patterns */
+.indian-border {
+  border-image: linear-gradient(45deg, #FF6B35, #FFD700, #8B4513, #FFD700, #FF6B35) 1;
+  border-width: 3px;
+  border-style: solid;
+}
