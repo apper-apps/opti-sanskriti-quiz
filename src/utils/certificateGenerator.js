@@ -70,10 +70,11 @@ export const generateCertificate = (userData) => {
     ctx.font = "20px Hind, sans-serif"
     ctx.fillText("has successfully completed the", 400, 280)
     
-    // Title
+// Title
     ctx.fillStyle = "#FFD700"
     ctx.font = "bold 28px Vesper Libre, serif"
-    ctx.fillText("Mythology Champion of the Week", 400, 320)
+    const titleText = userData.rankingTitle || "प्रयास आरंभ"
+    ctx.fillText(titleText, 400, 320)
     
     // Score
     ctx.fillStyle = "#228B22"
@@ -127,26 +128,46 @@ export const shareCertificateWhatsApp = async (userData) => {
   try {
     const imageUrl = await generateCertificate(userData)
     
-// Convert blob URL to actual blob for sharing
+    // Convert blob URL to actual blob for sharing
     const response = await fetch(imageUrl)
     const blob = await response.blob()
     
-    // Check if File constructor is available
+// Check if File constructor is available
     let file = null
-    if (typeof File !== 'undefined') {
-      file = new File([blob], `SanskritiQuiz-Certificate-${userData.name}.png`, {
-        type: "image/png"
-      })
+    if (typeof File !== 'undefined' && File) {
+      try {
+        file = new File([blob], `SanskritiQuiz-Certificate-${userData.name}.png`, {
+          type: "image/png"
+        })
+      } catch (error) {
+        console.warn('File constructor not supported:', error)
+        file = null
+      }
     }
-if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+
+    // Try native sharing with image first
+    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         title: "My SanskritiQuiz Certificate!",
-        text: `I scored ${userData.score}/10 in this week's mythology quiz! 🏆`,
+        text: `I achieved "${userData.rankingTitle}" ranking with ${userData.score}/10 in mythology quiz! 🏆`,
         files: [file]
       })
+    } else if (navigator.share) {
+      // Share without file but with enhanced text
+      await navigator.share({
+        title: "My SanskritiQuiz Certificate!",
+        text: `I achieved "${userData.rankingTitle}" ranking with ${userData.score}/10 in SanskritiQuiz! 🏆📚\n\nTest your knowledge at SanskritiQuiz.com`
+      })
     } else {
-      // Fallback: open WhatsApp with text only
-      const message = `I just scored ${userData.score}/10 in SanskritiQuiz - Weekly Mythology Quiz! 🏆📚\n\nTest your knowledge of Indian scriptures at SanskritiQuiz.com`
+      // Fallback: Download image and open WhatsApp
+      const link = document.createElement("a")
+      link.download = `SanskritiQuiz-Certificate-${userData.name.replace(/\s+/g, "-")}.png`
+      link.href = imageUrl
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      const message = `I achieved "${userData.rankingTitle}" ranking with ${userData.score}/10 in SanskritiQuiz! 🏆📚\n\nTest your knowledge of Indian scriptures at SanskritiQuiz.com`
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
       window.open(whatsappUrl, "_blank")
     }
@@ -154,8 +175,8 @@ if (file && navigator.share && navigator.canShare && navigator.canShare({ files:
     URL.revokeObjectURL(imageUrl)
   } catch (error) {
     console.error("Error sharing certificate:", error)
-    // Fallback text share
-    const message = `I just scored ${userData.score}/10 in SanskritiQuiz - Weekly Mythology Quiz! 🏆📚\n\nTest your knowledge of Indian scriptures at SanskritiQuiz.com`
+    // Fallback text share with ranking
+    const message = `I achieved "${userData.rankingTitle}" ranking with ${userData.score}/10 in SanskritiQuiz! 🏆📚\n\nTest your knowledge of Indian scriptures at SanskritiQuiz.com`
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
   }

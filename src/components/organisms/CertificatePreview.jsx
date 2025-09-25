@@ -77,12 +77,11 @@ const CertificatePreview = ({ userData, className, ...props }) => {
           has successfully completed the
         </p>
         
-        <div className="py-3 px-6 bg-gradient-to-r from-gold/20 to-saffron/20 rounded-xl">
+<div className="py-3 px-6 bg-gradient-to-r from-gold/20 to-saffron/20 rounded-xl">
           <h5 className="text-2xl font-bold font-vesper bg-gradient-to-r from-saffron to-gold bg-clip-text text-transparent">
-            Mythology Champion of the Week
+            {userData.rankingTitle || "प्रयास आरंभ"}
           </h5>
         </div>
-        
         <div className="flex justify-center items-center space-x-8 py-6">
           <div className="text-center">
             <div className="text-4xl font-bold font-vesper text-success mb-1">

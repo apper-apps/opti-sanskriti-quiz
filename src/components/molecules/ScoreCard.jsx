@@ -9,6 +9,15 @@ const ScoreCard = ({ score, totalQuestions, timeTaken, rank, className, ...props
   const isExcellent = percentage >= 80
   const isGood = percentage >= 60
   
+  const getRankingTitle = (score) => {
+    if (score === 1) return "प्रयास आरंभ"
+    if (score >= 2 && score <= 5) return "ज्ञान पथिक"
+    if (score >= 6 && score <= 7) return "संस्कृति साधक"
+    if (score >= 8 && score <= 9) return "ज्ञान रत्न"
+    if (score === 10) return "संस्कृति महारथी"
+    return "प्रयास आरंभ"
+  }
+  
   const getPerformanceLevel = () => {
     if (percentage >= 90) return { level: "Outstanding", color: "success", icon: "Crown" }
     if (percentage >= 80) return { level: "Excellent", color: "default", icon: "Award" }
@@ -17,13 +26,13 @@ const ScoreCard = ({ score, totalQuestions, timeTaken, rank, className, ...props
   }
   
   const performance = getPerformanceLevel()
+  const rankingTitle = getRankingTitle(score)
   
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = seconds % 60
     return `${minutes}m ${remainingSeconds}s`
   }
-  
   return (
     <Card variant="ornate" className={cn("p-8 text-center", className)} {...props}>
       {/* Decorative Header */}
@@ -34,13 +43,18 @@ const ScoreCard = ({ score, totalQuestions, timeTaken, rank, className, ...props
           </div>
         </div>
         
-        <h2 className="text-2xl font-bold font-vesper text-saddle-brown mb-2 paisley-decoration">
+<h2 className="text-2xl font-bold font-vesper text-saddle-brown mb-2 paisley-decoration">
           Quiz Completed!
         </h2>
         
-        <Badge variant={performance.color} className="text-lg px-4 py-2">
-          {performance.level}
-        </Badge>
+        <div className="space-y-2">
+          <Badge variant={performance.color} className="text-lg px-4 py-2">
+            {performance.level}
+          </Badge>
+          <div className="text-xl font-bold font-vesper bg-gradient-to-r from-saffron to-gold bg-clip-text text-transparent">
+            {rankingTitle}
+          </div>
+        </div>
       </div>
       
       {/* Score Display */}

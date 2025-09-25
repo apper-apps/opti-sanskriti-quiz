@@ -77,10 +77,19 @@ const Results = () => {
       </div>
     )
   }
-  
+// Ranking title function
+  const getRankingTitle = (score) => {
+    if (score === 1) return "प्रयास आरंभ"
+    if (score >= 2 && score <= 5) return "ज्ञान पथिक"
+    if (score >= 6 && score <= 7) return "संस्कृति साधक"
+    if (score >= 8 && score <= 9) return "ज्ञान रत्न"
+    if (score === 10) return "संस्कृति महारथी"
+    return "प्रयास आरंभ"
+  }
+
   const { user, attempt, answers, questions } = resultsData
   const correctAnswers = answers.filter(answer => answer.isCorrect).length
-  
+  const rankingTitle = getRankingTitle(correctAnswers)
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -138,13 +147,14 @@ const Results = () => {
             </p>
           </div>
           
-          <CertificatePreview
+<CertificatePreview
             userData={{
               name: user.name,
               score: correctAnswers,
               totalQuestions: questions.length,
               timeTaken: attempt.time_taken,
-              rank: weeklyRank
+              rank: weeklyRank,
+              rankingTitle: rankingTitle
             }}
           />
         </motion.div>
