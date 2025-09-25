@@ -11,9 +11,9 @@ import Card from "@/components/atoms/Card"
 import Loading from "@/components/ui/Loading"
 
 const UserEntry = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    mobile: ""
+const [formData, setFormData] = useState({
+    name_c: "",
+    mobile_c: ""
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
@@ -55,15 +55,14 @@ const UserEntry = () => {
       }
       
       // Create or find user
-      const user = await userService.createUser({
-        name: formData.name.trim(),
-        mobile: formData.mobile.trim()
+const user = await userService.createUser({
+        name_c: formData.name_c.trim(),
+        mobile_c: formData.mobile_c.trim()
       })
-      
       // Store user data in sessionStorage for quiz
       sessionStorage.setItem("currentUser", JSON.stringify(user))
       
-      toast.success(`Welcome ${user.name}! Let's begin the quiz! 🎉`)
+toast.success(`Welcome ${user.name_c || user.Name}! Let's begin the quiz! 🎉`)
       navigate("/quiz")
       
     } catch (error) {
@@ -124,26 +123,26 @@ const UserEntry = () => {
               {/* Name Field */}
               <div>
                 <Input
-                  label="Full Name"
-                  name="name"
-                  value={formData.name}
+label="Full Name"
+                  name="name_c"
+                  value={formData.name_c}
                   onChange={handleInputChange}
                   placeholder="Enter your full name"
-                  error={errors.name}
+                  error={errors.name_c}
                   required
                 />
               </div>
               
               {/* Mobile Field */}
-              <div>
+<div>
                 <Input
                   label="Mobile Number"
-                  name="mobile"
+                  name="mobile_c"
                   type="tel"
-                  value={formData.mobile}
+                  value={formData.mobile_c}
                   onChange={handleInputChange}
                   placeholder="Enter 10-digit mobile number"
-                  error={errors.mobile}
+                  error={errors.mobile_c}
                   maxLength={10}
                   required
                 />

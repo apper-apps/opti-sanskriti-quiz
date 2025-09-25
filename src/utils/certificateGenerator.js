@@ -63,7 +63,7 @@ export const generateCertificate = (userData) => {
     // Name (highlighted)
     ctx.fillStyle = "#FF6B35"
     ctx.font = "bold 32px Vesper Libre, serif"
-    ctx.fillText(userData.name, 400, 240)
+ctx.fillText(userData.name || userData.name_c, 400, 240)
     
     // Achievement text
     ctx.fillStyle = "#8B4513"
@@ -112,7 +112,7 @@ export const downloadCertificate = async (userData) => {
   try {
     const imageUrl = await generateCertificate(userData)
     const link = document.createElement("a")
-    link.download = `SanskritiQuiz-Certificate-${userData.name.replace(/\s+/g, "-")}.png`
+link.download = `SanskritiQuiz-Certificate-${(userData.name || userData.name_c).replace(/\s+/g, "-")}.png`
     link.href = imageUrl
     document.body.appendChild(link)
     link.click()
@@ -134,9 +134,9 @@ export const shareCertificateWhatsApp = async (userData) => {
     
 // Check if File constructor is available
     let file = null
-    if (typeof File !== 'undefined' && File) {
+    if (typeof window !== 'undefined' && typeof File !== 'undefined' && File) {
       try {
-        file = new File([blob], `SanskritiQuiz-Certificate-${userData.name}.png`, {
+        file = new File([blob], `SanskritiQuiz-Certificate-${userData.name || userData.name_c}.png`, {
           type: "image/png"
         })
       } catch (error) {
@@ -161,7 +161,7 @@ export const shareCertificateWhatsApp = async (userData) => {
     } else {
       // Fallback: Download image and open WhatsApp
       const link = document.createElement("a")
-      link.download = `SanskritiQuiz-Certificate-${userData.name.replace(/\s+/g, "-")}.png`
+link.download = `SanskritiQuiz-Certificate-${(userData.name || userData.name_c).replace(/\s+/g, "-")}.png`
       link.href = imageUrl
       document.body.appendChild(link)
       link.click()

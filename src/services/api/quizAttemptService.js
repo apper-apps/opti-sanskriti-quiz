@@ -1,87 +1,269 @@
-import quizAttemptsData from "@/services/mockData/quizAttempts.json"
 import { getWeekNumber } from "@/utils/dateHelpers"
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 class QuizAttemptService {
   constructor() {
-    this.attempts = [...quizAttemptsData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'quiz_attempt_c'
   }
 
   async getAllAttempts() {
-    await delay(250)
-    return [...this.attempts]
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "user_id_c" } },
+          { field: { Name: "user_name_c" } },
+          { field: { Name: "score_c" } },
+          { field: { Name: "time_taken_c" } },
+          { field: { Name: "quiz_date_c" } },
+          { field: { Name: "week_number_c" } },
+          { field: { Name: "total_questions_c" } }
+        ],
+        pagingInfo: {
+          limit: 1000,
+          offset: 0
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      return response.data || []
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching all quiz attempts:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      throw new Error("Failed to fetch quiz attempts")
+    }
   }
 
   async getAttemptById(id) {
-    await delay(200)
-    const attempt = this.attempts.find(a => a.Id === parseInt(id))
-    if (!attempt) {
-      throw new Error("Quiz attempt not found")
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "user_id_c" } },
+          { field: { Name: "user_name_c" } },
+          { field: { Name: "score_c" } },
+          { field: { Name: "time_taken_c" } },
+          { field: { Name: "quiz_date_c" } },
+          { field: { Name: "week_number_c" } },
+          { field: { Name: "total_questions_c" } }
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, id, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      if (!response.data) {
+        throw new Error("Quiz attempt not found")
+      }
+      
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching quiz attempt by ID:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      throw new Error("Failed to fetch quiz attempt")
     }
-    return { ...attempt }
   }
 
   async getWeeklyLeaderboard(weekNumber = null) {
-    await delay(300)
-    
-    const currentWeek = weekNumber || getWeekNumber(new Date())
-    
-    const weeklyAttempts = this.attempts
-      .filter(attempt => attempt.week_number === currentWeek)
-      .sort((a, b) => {
-        if (b.score !== a.score) {
-          return b.score - a.score // Higher score first
+    try {
+      const currentWeek = weekNumber || getWeekNumber(new Date())
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "user_id_c" } },
+          { field: { Name: "user_name_c" } },
+          { field: { Name: "score_c" } },
+          { field: { Name: "time_taken_c" } },
+          { field: { Name: "quiz_date_c" } },
+          { field: { Name: "week_number_c" } },
+          { field: { Name: "total_questions_c" } }
+        ],
+        where: [
+          {
+            FieldName: "week_number_c",
+            Operator: "EqualTo",
+            Values: [currentWeek.toString()]
+          }
+        ],
+        orderBy: [
+          {
+            fieldName: "score_c",
+            sorttype: "DESC"
+          },
+          {
+            fieldName: "time_taken_c", 
+            sorttype: "ASC"
+          }
+        ],
+        pagingInfo: {
+          limit: 10,
+          offset: 0
         }
-        return a.time_taken - b.time_taken // Lower time first for same score
-      })
-      .slice(0, 10) // Top 10 only
-    
-    return weeklyAttempts
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching weekly leaderboard:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      return []
+    }
   }
 
   async getUserWeeklyRank(userId, weekNumber = null) {
-    await delay(200)
-    
-    const currentWeek = weekNumber || getWeekNumber(new Date())
-    const leaderboard = await this.getWeeklyLeaderboard(currentWeek)
-    
-    const userRank = leaderboard.findIndex(attempt => attempt.user_id === userId) + 1
-    return userRank || null
+    try {
+      const leaderboard = await this.getWeeklyLeaderboard(weekNumber)
+      const userRank = leaderboard.findIndex(attempt => 
+        attempt.user_id_c?.Id === userId || attempt.user_id_c === userId
+      ) + 1
+      return userRank || null
+    } catch (error) {
+      console.error("Error getting user weekly rank:", error)
+      return null
+    }
   }
 
   async createAttempt(attemptData) {
-    await delay(400)
-    
     try {
-      const newId = Math.max(...this.attempts.map(a => a.Id), 0) + 1
       const currentWeek = getWeekNumber(new Date())
       
-      const newAttempt = {
-        Id: newId,
-        user_id: attemptData.user_id,
-        user_name: attemptData.user_name,
-        score: attemptData.score,
-        time_taken: attemptData.time_taken,
-        quiz_date: new Date().toISOString(),
-        week_number: currentWeek,
-        total_questions: attemptData.total_questions || 10
+      const params = {
+        records: [{
+          Name: `Quiz Attempt - ${attemptData.user_name_c}`,
+          user_id_c: parseInt(attemptData.user_id_c),
+          user_name_c: attemptData.user_name_c,
+          score_c: attemptData.score_c,
+          time_taken_c: attemptData.time_taken_c,
+          quiz_date_c: new Date().toISOString(),
+          week_number_c: currentWeek,
+          total_questions_c: attemptData.total_questions_c || 10
+        }]
       }
       
-      this.attempts.push(newAttempt)
-      return { ...newAttempt }
+      const response = await this.apperClient.createRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create quiz attempt ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              console.error(`${error.fieldLabel}: ${error}`)
+            })
+            if (record.message) console.error(record.message)
+          })
+        }
+        
+        if (successfulRecords.length > 0) {
+          return successfulRecords[0].data
+        }
+      }
+      
+      throw new Error("Failed to create quiz attempt")
     } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating quiz attempt:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
       throw new Error("Failed to save quiz attempt")
     }
   }
 
   async getWeeklyStats(weekNumber = null) {
-    await delay(250)
-    
-    const currentWeek = weekNumber || getWeekNumber(new Date())
-    const weeklyAttempts = this.attempts.filter(attempt => attempt.week_number === currentWeek)
-    
-    if (weeklyAttempts.length === 0) {
+    try {
+      const currentWeek = weekNumber || getWeekNumber(new Date())
+      
+      const params = {
+        fields: [
+          { field: { Name: "score_c" } },
+          { field: { Name: "time_taken_c" } }
+        ],
+        where: [
+          {
+            FieldName: "week_number_c",
+            Operator: "EqualTo",
+            Values: [currentWeek.toString()]
+          }
+        ],
+        pagingInfo: {
+          limit: 1000,
+          offset: 0
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return {
+          totalAttempts: 0,
+          averageScore: 0,
+          highestScore: 0,
+          averageTime: 0
+        }
+      }
+      
+      const weeklyAttempts = response.data || []
+      
+      if (weeklyAttempts.length === 0) {
+        return {
+          totalAttempts: 0,
+          averageScore: 0,
+          highestScore: 0,
+          averageTime: 0
+        }
+      }
+      
+      const totalScore = weeklyAttempts.reduce((sum, attempt) => sum + attempt.score_c, 0)
+      const totalTime = weeklyAttempts.reduce((sum, attempt) => sum + attempt.time_taken_c, 0)
+      
+      return {
+        totalAttempts: weeklyAttempts.length,
+        averageScore: Math.round((totalScore / weeklyAttempts.length) * 10) / 10,
+        highestScore: Math.max(...weeklyAttempts.map(a => a.score_c)),
+        averageTime: Math.round(totalTime / weeklyAttempts.length)
+      }
+    } catch (error) {
+      console.error("Error getting weekly stats:", error)
       return {
         totalAttempts: 0,
         averageScore: 0,
@@ -89,27 +271,50 @@ class QuizAttemptService {
         averageTime: 0
       }
     }
-    
-    const totalScore = weeklyAttempts.reduce((sum, attempt) => sum + attempt.score, 0)
-    const totalTime = weeklyAttempts.reduce((sum, attempt) => sum + attempt.time_taken, 0)
-    
-    return {
-      totalAttempts: weeklyAttempts.length,
-      averageScore: Math.round((totalScore / weeklyAttempts.length) * 10) / 10,
-      highestScore: Math.max(...weeklyAttempts.map(a => a.score)),
-      averageTime: Math.round(totalTime / weeklyAttempts.length)
-    }
   }
 
   async getUserBestScore(userId) {
-    await delay(200)
-    
-    const userAttempts = this.attempts.filter(attempt => attempt.user_id === userId)
-    if (userAttempts.length === 0) {
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "score_c" } }
+        ],
+        where: [
+          {
+            FieldName: "user_id_c",
+            Operator: "EqualTo",
+            Values: [userId.toString()]
+          }
+        ],
+        orderBy: [
+          {
+            fieldName: "score_c",
+            sorttype: "DESC"
+          }
+        ],
+        pagingInfo: {
+          limit: 1,
+          offset: 0
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return null
+      }
+      
+      const userAttempts = response.data || []
+      if (userAttempts.length === 0) {
+        return null
+      }
+      
+      return userAttempts[0].score_c
+    } catch (error) {
+      console.error("Error getting user best score:", error)
       return null
     }
-    
-    return Math.max(...userAttempts.map(a => a.score))
   }
 }
 

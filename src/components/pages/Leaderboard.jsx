@@ -48,9 +48,9 @@ const Leaderboard = () => {
   
   const handleShareLeaderboard = async () => {
     try {
-      const leaderboardText = `SanskritiQuiz Week ${currentWeek.weekNumber} Leaderboard 🏆\n\n` +
+const leaderboardText = `SanskritiQuiz Week ${currentWeek.weekNumber} Leaderboard 🏆\n\n` +
         leaderboardData.slice(0, 10).map((entry, index) => 
-          `${index + 1}. ${entry.user_name} - ${entry.score}/10`
+          `${index + 1}. ${entry.user_name_c} - ${entry.score_c}/10`
         ).join("\n") +
         `\n\nJoin the quiz at SanskritiQuiz.com! 📚✨`
       
@@ -232,13 +232,13 @@ const Leaderboard = () => {
                 </div>
                 <Badge variant="secondary" className="mb-3">🥈 Runner Up</Badge>
                 <div className="text-xl font-bold font-vesper text-saddle-brown mb-2">
-                  {leaderboardData[1].user_name}
+{leaderboardData[1].user_name_c}
                 </div>
                 <div className="text-3xl font-bold text-gold font-vesper mb-1">
-                  {leaderboardData[1].score}/10
+                  {leaderboardData[1].score_c}/10
                 </div>
                 <div className="text-sm text-saddle-brown/70 font-hind">
-                  {formatTime(leaderboardData[1].time_taken)}
+                  {formatTime(leaderboardData[1].time_taken_c)}
                 </div>
               </Card>
               
@@ -249,13 +249,13 @@ const Leaderboard = () => {
                 </div>
                 <Badge variant="default" className="mb-3 text-lg px-4 py-2">🥇 Champion</Badge>
                 <div className="text-2xl font-bold font-vesper text-saddle-brown mb-2">
-                  {leaderboardData[0].user_name}
+{leaderboardData[0].user_name_c}
                 </div>
                 <div className="text-4xl font-bold text-gold font-vesper mb-2">
-                  {leaderboardData[0].score}/10
+                  {leaderboardData[0].score_c}/10
                 </div>
                 <div className="text-sm text-saddle-brown/70 font-hind">
-                  {formatTime(leaderboardData[0].time_taken)}
+                  {formatTime(leaderboardData[0].time_taken_c)}
                 </div>
               </Card>
               
@@ -266,13 +266,13 @@ const Leaderboard = () => {
                 </div>
                 <Badge variant="warning" className="mb-3">🥉 Third Place</Badge>
                 <div className="text-xl font-bold font-vesper text-saddle-brown mb-2">
-                  {leaderboardData[2].user_name}
+{leaderboardData[2].user_name_c}
                 </div>
                 <div className="text-3xl font-bold text-gold font-vesper mb-1">
-                  {leaderboardData[2].score}/10
+                  {leaderboardData[2].score_c}/10
                 </div>
                 <div className="text-sm text-saddle-brown/70 font-hind">
-                  {formatTime(leaderboardData[2].time_taken)}
+                  {formatTime(leaderboardData[2].time_taken_c)}
                 </div>
               </Card>
             </div>
@@ -360,23 +360,23 @@ const Leaderboard = () => {
                         </td>
                         
                         <td className="px-6 py-4">
-                          <div className="font-medium text-saddle-brown font-hind">
-                            {entry.user_name}
+<div className="font-medium text-saddle-brown font-hind">
+                            {entry.user_name_c}
                           </div>
                         </td>
                         
                         <td className="px-6 py-4 text-center">
-                          <div className="text-2xl font-bold font-vesper text-saddle-brown">
-                            {entry.score}/10
+<div className="text-2xl font-bold font-vesper text-saddle-brown">
+                            {entry.score_c}/10
                           </div>
                           <div className="text-sm text-saffron font-hind">
-                            {Math.round((entry.score / 10) * 100)}%
+                            {Math.round((entry.score_c / 10) * 100)}%
                           </div>
                         </td>
                         
-                        <td className="px-6 py-4 text-center">
+<td className="px-6 py-4 text-center">
                           <div className="font-medium text-saddle-brown font-hind">
-                            {formatTime(entry.time_taken)}
+                            {formatTime(entry.time_taken_c)}
                           </div>
                         </td>
                         

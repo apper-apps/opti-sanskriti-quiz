@@ -1,12 +1,13 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/utils/cn"
 import { getCurrentWeek, getSanskritBlessing } from "@/utils/dateHelpers"
 import ApperIcon from "@/components/ApperIcon"
 import Button from "@/components/atoms/Button"
-
+import { AuthContext } from '@/App'
 const Header = () => {
+  const { logout } = useContext(AuthContext)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
   const currentWeek = getCurrentWeek()
@@ -42,7 +43,7 @@ const Header = () => {
             </div>
           </Link>
           
-          {/* Desktop Navigation */}
+{/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
             {navigationItems.map((item) => (
               <Link
@@ -60,6 +61,17 @@ const Header = () => {
                 <span>{item.name}</span>
               </Link>
             ))}
+            
+            {/* Logout Button */}
+            <Button
+              onClick={logout}
+              variant="ghost"
+              size="sm"
+              className="flex items-center space-x-2 text-saddle-brown hover:text-saffron"
+            >
+              <ApperIcon name="LogOut" className="w-5 h-5" />
+              <span>Logout</span>
+            </Button>
           </nav>
           
           {/* Sanskrit Blessing (Desktop) */}
@@ -72,18 +84,21 @@ const Header = () => {
             </div>
           </div>
           
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <ApperIcon 
-              name={isMobileMenuOpen ? "X" : "Menu"} 
-              className="w-6 h-6" 
-            />
-          </Button>
+{/* Desktop Logout Button and Mobile Menu */}
+          <div className="flex items-center space-x-2">
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <ApperIcon 
+                name={isMobileMenuOpen ? "X" : "Menu"} 
+                className="w-6 h-6" 
+              />
+            </Button>
+          </div>
         </div>
       </div>
       
@@ -98,7 +113,7 @@ const Header = () => {
             transition={{ duration: 0.2 }}
           >
             <div className="p-6">
-              {/* Mobile Navigation */}
+{/* Mobile Navigation */}
               <nav className="space-y-2 mb-8">
                 {navigationItems.map((item, index) => (
                   <motion.div
@@ -123,6 +138,24 @@ const Header = () => {
                     </Link>
                   </motion.div>
                 ))}
+                
+                {/* Mobile Logout Button */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navigationItems.length * 0.1 }}
+                >
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      logout()
+                    }}
+                    className="flex items-center space-x-3 px-4 py-3 rounded-xl font-medium font-hind transition-all duration-200 text-saddle-brown hover:bg-cornsilk/50 hover:text-saffron w-full"
+                  >
+                    <ApperIcon name="LogOut" className="w-6 h-6" />
+                    <span className="text-lg">Logout</span>
+                  </button>
+                </motion.div>
               </nav>
               
               {/* Mobile Week Info */}

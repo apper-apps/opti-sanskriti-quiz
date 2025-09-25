@@ -73,14 +73,14 @@ const Quiz = () => {
     setIsAnswerRevealed(true)
     
     // Check if answer is correct
-    const isCorrect = questionService.checkAnswer(currentQuestion.Id, option)
+const isCorrect = currentQuestion.correct_option_c === option
     
     // Store user's answer
     const answerData = {
-      questionId: currentQuestion.Id,
+questionId: currentQuestion.Id,
       selectedOption: option,
       isCorrect,
-      correctOption: questionService.getCorrectAnswer(currentQuestion.Id)
+correctOption: currentQuestion.correct_option_c
     }
     
     setUserAnswers(prev => [...prev, answerData])
@@ -123,12 +123,12 @@ const Quiz = () => {
       // Add current answer if not yet added
       let finalAnswers = [...userAnswers]
       if (selectedAnswer && !isAnswerRevealed) {
-        const isCorrect = questionService.checkAnswer(currentQuestion.Id, selectedAnswer)
+const isCorrect = currentQuestion.correct_option_c === selectedAnswer
         finalAnswers.push({
           questionId: currentQuestion.Id,
           selectedOption: selectedAnswer,
           isCorrect,
-          correctOption: questionService.getCorrectAnswer(currentQuestion.Id)
+correctOption: currentQuestion.correct_option_c
         })
       }
       
@@ -136,10 +136,10 @@ const Quiz = () => {
       
       // Save quiz attempt
       const attemptData = {
-        user_id: userData.Id,
-        user_name: userData.name,
-        score: finalScore,
-        time_taken: totalTime,
+user_id_c: userData.Id,
+        user_name_c: userData.name_c || userData.name,
+        score_c: finalScore,
+        time_taken_c: totalTime,
         total_questions: questions.length
       }
       
@@ -239,22 +239,22 @@ const Quiz = () => {
                 <div className="flex items-center space-x-2 mb-4">
                   <ApperIcon name="BookOpen" className="w-5 h-5 text-saffron" />
                   <span className="text-sm font-medium text-saddle-brown/70 font-hind">
-                    {currentQuestion.category}
+{currentQuestion.category_c}
                   </span>
                 </div>
                 
                 <h2 className="text-2xl font-bold font-vesper text-saddle-brown leading-relaxed">
-                  {currentQuestion.question_text}
+{currentQuestion.question_text_c}
                 </h2>
               </div>
               
               {/* Answer Options */}
               <div className="space-y-4 mb-6">
-                {[
-                  { key: "a", text: currentQuestion.option_a },
-                  { key: "b", text: currentQuestion.option_b },
-                  { key: "c", text: currentQuestion.option_c },
-                  { key: "d", text: currentQuestion.option_d }
+{[
+                  { key: "a", text: currentQuestion.option_a_c },
+                  { key: "b", text: currentQuestion.option_b_c },
+                  { key: "c", text: currentQuestion.option_c_c },
+                  { key: "d", text: currentQuestion.option_d_c }
                 ].map((option) => (
                   <QuestionOption
                     key={option.key}

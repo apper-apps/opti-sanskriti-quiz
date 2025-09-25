@@ -105,7 +105,7 @@ const Results = () => {
           </div>
           
           <h1 className="text-3xl md:text-4xl font-bold font-vesper text-saddle-brown mb-4">
-            Congratulations, {user.name}!
+Congratulations, {user.name_c || user.Name}!
           </h1>
           
           <div className="sanskrit-text text-xl text-saffron font-vesper mb-2">
@@ -125,8 +125,8 @@ const Results = () => {
         >
           <ScoreCard
             score={correctAnswers}
-            totalQuestions={questions.length}
-            timeTaken={attempt.time_taken}
+totalQuestions={questions.length}
+            timeTaken={attempt.time_taken_c}
             rank={weeklyRank}
           />
         </motion.div>
@@ -148,11 +148,11 @@ const Results = () => {
           </div>
           
 <CertificatePreview
-            userData={{
-              name: user.name,
+userData={{
+              name: user.name_c || user.Name,
               score: correctAnswers,
               totalQuestions: questions.length,
-              timeTaken: attempt.time_taken,
+              timeTaken: attempt.time_taken_c,
               rank: weeklyRank,
               rankingTitle: rankingTitle
             }}

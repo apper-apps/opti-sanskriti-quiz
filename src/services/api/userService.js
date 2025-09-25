@@ -1,87 +1,234 @@
-import usersData from "@/services/mockData/users.json"
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 class UserService {
   constructor() {
-    this.users = [...usersData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'user_c'
   }
 
   async getAllUsers() {
-    await delay(250)
-    return [...this.users]
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "name_c" } },
+          { field: { Name: "mobile_c" } },
+          { field: { Name: "created_at_c" } }
+        ],
+        pagingInfo: {
+          limit: 1000,
+          offset: 0
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      return response.data || []
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching all users:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      throw new Error("Failed to fetch users")
+    }
   }
 
   async getUserById(id) {
-    await delay(200)
-    const user = this.users.find(u => u.Id === parseInt(id))
-    if (!user) {
-      throw new Error("User not found")
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "name_c" } },
+          { field: { Name: "mobile_c" } },
+          { field: { Name: "created_at_c" } }
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, id, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      if (!response.data) {
+        throw new Error("User not found")
+      }
+      
+      return response.data
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching user by ID:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      throw new Error("Failed to fetch user")
     }
-    return { ...user }
   }
 
   async createUser(userData) {
-    await delay(300)
-    
     try {
       // Check if user with this mobile already exists
-      const existingUser = this.users.find(u => u.mobile === userData.mobile)
+      const existingUser = await this.findUserByMobile(userData.mobile_c || userData.mobile)
       if (existingUser) {
-        return { ...existingUser }
+        return existingUser
       }
       
-      const newId = Math.max(...this.users.map(u => u.Id), 0) + 1
-      const newUser = {
-        Id: newId,
-        name: userData.name,
-        mobile: userData.mobile,
-        created_at: new Date().toISOString()
+      const params = {
+        records: [{
+          Name: userData.name_c || userData.name,
+          name_c: userData.name_c || userData.name,
+          mobile_c: userData.mobile_c || userData.mobile,
+          created_at_c: new Date().toISOString()
+        }]
       }
       
-      this.users.push(newUser)
-      return { ...newUser }
+      const response = await this.apperClient.createRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create user ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              console.error(`${error.fieldLabel}: ${error}`)
+            })
+            if (record.message) console.error(record.message)
+          })
+        }
+        
+        if (successfulRecords.length > 0) {
+          return successfulRecords[0].data
+        }
+      }
+      
+      throw new Error("Failed to create user")
     } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating user:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
       throw new Error("Failed to create user")
     }
   }
 
   async findUserByMobile(mobile) {
-    await delay(200)
-    
-    const user = this.users.find(u => u.mobile === mobile)
-    return user ? { ...user } : null
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "name_c" } },
+          { field: { Name: "mobile_c" } },
+          { field: { Name: "created_at_c" } }
+        ],
+        where: [
+          {
+            FieldName: "mobile_c",
+            Operator: "EqualTo",
+            Values: [mobile]
+          }
+        ],
+        pagingInfo: {
+          limit: 1,
+          offset: 0
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return null
+      }
+      
+      const users = response.data || []
+      return users.length > 0 ? users[0] : null
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error finding user by mobile:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
+      return null
+    }
   }
 
   async updateUser(id, userData) {
-    await delay(250)
-    
     try {
-      const userIndex = this.users.findIndex(u => u.Id === parseInt(id))
-      if (userIndex === -1) {
-        throw new Error("User not found")
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          Name: userData.name_c || userData.name,
+          name_c: userData.name_c || userData.name,
+          mobile_c: userData.mobile_c || userData.mobile
+        }]
       }
       
-      this.users[userIndex] = {
-        ...this.users[userIndex],
-        ...userData,
-        Id: parseInt(id) // Ensure ID doesn't change
+      const response = await this.apperClient.updateRecord(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
       }
       
-      return { ...this.users[userIndex] }
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success)
+        const failedUpdates = response.results.filter(result => !result.success)
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update user ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`)
+          
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              console.error(`${error.fieldLabel}: ${error}`)
+            })
+            if (record.message) console.error(record.message)
+          })
+        }
+        
+        if (successfulUpdates.length > 0) {
+          return successfulUpdates[0].data
+        }
+      }
+      
+      throw new Error("Failed to update user")
     } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating user:", error.response.data.message)
+      } else {
+        console.error(error)
+      }
       throw new Error("Failed to update user")
     }
   }
 
   validateUserData(userData) {
     const errors = []
+    const name = userData.name_c || userData.name
+    const mobile = userData.mobile_c || userData.mobile
     
-    if (!userData.name || userData.name.trim().length < 2) {
+    if (!name || name.trim().length < 2) {
       errors.push("Name must be at least 2 characters long")
     }
     
-    if (!userData.mobile || !/^[6-9]\d{9}$/.test(userData.mobile)) {
+    if (!mobile || !/^[6-9]\d{9}$/.test(mobile)) {
       errors.push("Please enter a valid 10-digit mobile number")
     }
     
