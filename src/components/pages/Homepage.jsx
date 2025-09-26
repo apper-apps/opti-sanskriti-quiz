@@ -53,7 +53,7 @@ const currentWeek = getCurrentWeek()
         }
 
 // Fetch next/current Ekadashi (including today)
-        const today = new Date().toISOString().split('T')[0]
+const today = new Date().toISOString().split('T')[0]
         const ekadashiParams = {
           fields: [
             { field: { Name: "Name" } },
@@ -64,7 +64,8 @@ const currentWeek = getCurrentWeek()
             {
               FieldName: "date_c",
               Operator: "GreaterThanOrEqualTo",
-              Values: [today]
+              Values: [today],
+              Include: true
             }
           ],
           orderBy: [{ fieldName: "date_c", sorttype: "ASC" }],
