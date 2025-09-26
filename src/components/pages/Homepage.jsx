@@ -52,7 +52,7 @@ const currentWeek = getCurrentWeek()
           setPanchangData(panchangResponse.data[0])
         }
 
-        // Fetch next Ekadashi
+// Fetch next/current Ekadashi (including today)
         const today = new Date().toISOString().split('T')[0]
         const ekadashiParams = {
           fields: [
