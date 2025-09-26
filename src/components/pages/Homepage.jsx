@@ -60,12 +60,31 @@ const today = new Date().toISOString().split('T')[0]
             { field: { Name: "event_name_c" } },
             { field: { Name: "date_c" } }
           ],
-          where: [
+          whereGroups: [
             {
-              FieldName: "date_c",
-              Operator: "GreaterThanOrEqualTo",
-              Values: [today],
-              Include: true
+              operator: "OR",
+              subGroups: [
+                {
+                  conditions: [
+                    {
+                      fieldName: "date_c",
+                      operator: "RelativeMatch",
+                      values: ["Today"]
+                    }
+                  ],
+                  operator: "OR"
+                },
+                {
+                  conditions: [
+                    {
+                      fieldName: "date_c",
+                      operator: "GreaterThan", 
+                      values: [today]
+                    }
+                  ],
+                  operator: "OR"
+                }
+              ]
             }
           ],
           orderBy: [{ fieldName: "date_c", sorttype: "ASC" }],
