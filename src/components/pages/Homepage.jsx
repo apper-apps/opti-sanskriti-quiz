@@ -9,28 +9,6 @@ const Homepage = () => {
   const currentWeek = getCurrentWeek()
   const blessing = getSanskritBlessing()
   
-  const features = [
-    {
-      icon: "BookOpen",
-      title: "Sacred Knowledge",
-      description: "Test your understanding of Bhagavad Gita, Puranas, and ancient scriptures"
-    },
-    {
-      icon: "Trophy",
-      title: "Weekly Championships",
-      description: "Compete with fellow devotees and earn your place on the leaderboard"
-    },
-    {
-      icon: "Award",
-      title: "Digital Certificates",
-      description: "Share your achievements with beautiful, personalized certificates"
-    },
-    {
-      icon: "Users",
-      title: "Community Learning",
-      description: "Join a community passionate about preserving ancient wisdom"
-    }
-  ]
   
   return (
     <div className="min-h-screen">
@@ -123,52 +101,6 @@ const Homepage = () => {
       </section>
       
       {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold font-vesper text-saddle-brown mb-4 paisley-decoration">
-              Why Choose SanskritiQuiz?
-            </h2>
-            <p className="text-lg text-saddle-brown/70 font-hind max-w-2xl mx-auto">
-              Experience the perfect blend of ancient wisdom and modern technology
-            </p>
-          </motion.div>
-          
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="p-6 text-center h-full hover:shadow-2xl transition-all duration-300 group">
-                  <div className="w-16 h-16 bg-gradient-to-br from-saffron to-gold rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <ApperIcon name={feature.icon} className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <h3 className="text-xl font-bold font-vesper text-saddle-brown mb-3">
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-saddle-brown/70 font-hind">
-                    {feature.description}
-                  </p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
       
       {/* Quiz Info Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-cornsilk to-floral-white">

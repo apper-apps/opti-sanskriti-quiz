@@ -123,6 +123,46 @@ class QuestionService {
       throw new Error("Failed to fetch all questions")
     }
   }
+async createQuestion(questionData) {
+    try {
+      const params = {
+        records: [questionData]
+      }
+      
+      const { ApperClient } = window.ApperSDK
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      })
+      
+      const response = await apperClient.createRecord("question_c", params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        throw new Error(response.message)
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success)
+        const failedRecords = response.results.filter(result => !result.success)
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create question ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
+          throw new Error(failedRecords[0].message || "Failed to create question")
+        }
+        
+        return successfulRecords[0]?.data
+      }
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating question:", error?.response?.data?.message)
+        throw new Error(error.response.data.message)
+      } else {
+        console.error("Error creating question:", error)
+        throw error
+      }
+    }
+  }
 
   checkAnswer(questionId, selectedOption) {
     // This method will be used with cached question data during quiz
