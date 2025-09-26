@@ -16,7 +16,6 @@ import PromptPassword from "@/components/pages/PromptPassword";
 import Quiz from "@/components/pages/Quiz";
 import Results from "@/components/pages/Results";
 import ErrorPage from "@/components/pages/ErrorPage";
-import UploadQuestion from "@/components/pages/UploadQuestion";
 
 // Create auth context
 export const AuthContext = createContext(null);
@@ -39,7 +38,6 @@ function AppContent() {
             <Route path="quiz" element={<Quiz />} />
             <Route path="results" element={<Results />} />
             <Route path="leaderboard" element={<Leaderboard />} />
-            <Route path="upload" element={<UploadQuestion />} />
           </Route>
         </Routes>
         <ToastContainer
