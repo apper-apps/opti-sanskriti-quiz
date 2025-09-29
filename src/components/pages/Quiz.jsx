@@ -260,8 +260,8 @@ user_id_c: userData.Id,
                     key={option.key}
                     option={option.text}
                     label={option.key.toUpperCase()}
-                    isSelected={selectedAnswer === option.key}
-                    isCorrect={currentQuestion.correct_option === option.key}
+isSelected={selectedAnswer === option.key}
+                    isCorrect={currentQuestion.correct_option_c === option.key}
                     isRevealed={isAnswerRevealed}
                     onClick={() => handleAnswerSelect(option.key)}
                   />
