@@ -1,6 +1,8 @@
+import React from "react";
+import Error from "@/components/ui/Error";
 class UserService {
   constructor() {
-const { ApperClient } = window.ApperSDK
+    const { ApperClient } = window.ApperSDK;
     
     // Validate environment variables before initialization
     const projectId = import.meta.env.VITE_APPER_PROJECT_ID;
@@ -168,8 +170,6 @@ const response = await this.apperClient.createRecord(this.tableName, params)
         throw new Error("An unexpected error occurred while creating your account")
       }
     }
-  }
-
 async findUserByMobile(mobile) {
     try {
       // Ensure ApperClient is properly initialized with authentication
