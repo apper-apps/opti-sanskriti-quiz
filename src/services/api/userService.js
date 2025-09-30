@@ -169,8 +169,8 @@ throw new Error("An unexpected error occurred while creating your account")
     }
   }
 
-  async findUserByMobile(mobile) {
-try {
+async findUserByMobile(mobile) {
+    try {
       // Ensure ApperClient is properly initialized with authentication
       if (!this.apperClient) {
         const { ApperClient } = window.ApperSDK;
