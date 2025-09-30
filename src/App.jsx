@@ -1,5 +1,4 @@
 import "@/index.css";
-import "@/index.css";
 import React, { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
@@ -106,51 +105,21 @@ function AppContent() {
     }
   };
 
-  if (!isInitialized) {
+if (!isInitialized) {
     return <div className="loading flex items-center justify-center p-6 h-full w-full"><svg className="animate-spin" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4"></path><path d="m16.2 7.8 2.9-2.9"></path><path d="M18 12h4"></path><path d="m16.2 16.2 2.9 2.9"></path><path d="M12 18v4"></path><path d="m4.9 19.1 2.9-2.9"></path><path d="M2 12h4"></path><path d="m4.9 4.9 2.9 2.9"></path></svg></div>;
   }
 
   return (
     <AuthContext.Provider value={authMethods}>
-      <Routes>
-
-function AppContent() {
-  
-  return (
-<div>
       <div className="min-h-screen bg-gradient-to-br from-floral-white to-cornsilk">
-<Routes>
-<Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/callback" element={<Callback />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
-        <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Homepage />} />
-          <Route path="entry" element={<UserEntry />} />
-          <Route path="quiz" element={<Quiz />} />
-          <Route path="results" element={<Results />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-        </Route>
-      </Routes>
-      <ToastContainer />
-    </AuthContext.Provider>
-  );
-}
-
-function App() {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </Provider>
-  );
-}
-
-export default App;
-<Route path="/" element={<Layout />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
+          <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
+          <Route path="/" element={<Layout />}>
             <Route index element={<Homepage />} />
             <Route path="entry" element={<UserEntry />} />
             <Route path="quiz" element={<Quiz />} />
@@ -175,8 +144,8 @@ export default App;
           }}
         />
       </div>
-</div>
-  )
+    </AuthContext.Provider>
+  );
 }
 
 function App() {
@@ -186,5 +155,6 @@ function App() {
         <AppContent />
       </BrowserRouter>
     </Provider>
-  )
+  );
 }
+export default App;
