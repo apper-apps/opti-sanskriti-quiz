@@ -91,41 +91,56 @@ class UserService {
         }]
       }
       
-      const response = await this.apperClient.createRecord(this.tableName, params)
+const response = await this.apperClient.createRecord(this.tableName, params)
       
-      if (!response.success) {
-        console.error(response.message)
-        throw new Error(response.message)
+      if (!response || !response.success) {
+        const errorMessage = response?.message || "Failed to create user account"
+        console.error("User creation failed:", errorMessage)
+        throw new Error(errorMessage)
       }
       
-      if (response.results) {
-        const successfulRecords = response.results.filter(result => result.success)
-        const failedRecords = response.results.filter(result => !result.success)
+      if (response.results && Array.isArray(response.results)) {
+        const successfulRecords = response.results.filter(result => result && result.success)
+        const failedRecords = response.results.filter(result => result && !result.success)
         
         if (failedRecords.length > 0) {
           console.error(`Failed to create user ${failedRecords.length} records:${JSON.stringify(failedRecords)}`)
           
           failedRecords.forEach(record => {
-            record.errors?.forEach(error => {
-              console.error(`${error.fieldLabel}: ${error}`)
-            })
-            if (record.message) console.error(record.message)
+            if (record.errors && Array.isArray(record.errors)) {
+              record.errors.forEach(error => {
+                console.error(`${error.fieldLabel || 'Field'}: ${error.message || error}`)
+              })
+            }
+            if (record.message) {
+              console.error("Record error:", record.message)
+            }
           })
+          
+          // If all records failed, throw the first error
+          if (successfulRecords.length === 0) {
+            const firstError = failedRecords[0]
+            const errorMsg = firstError?.message || "Failed to create user account"
+            throw new Error(errorMsg)
+          }
         }
         
-if (successfulRecords.length > 0) {
+        if (successfulRecords.length > 0 && successfulRecords[0].data) {
           return successfulRecords[0].data
         }
       }
       
-      throw new Error("No records were created successfully")
+      throw new Error("No user data returned from server")
     } catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error creating user in userService:", error.response.data.message)
         throw new Error(error.response.data.message)
+      } else if (error.message) {
+        console.error("Error creating user in userService:", error.message)
+        throw new Error(error.message)
       } else {
         console.error("Error creating user in userService:", error)
-        throw error.message ? new Error(error.message) : error
+        throw new Error("An unexpected error occurred while creating your account")
       }
     }
   }
@@ -152,10 +167,10 @@ if (successfulRecords.length > 0) {
         }
       }
       
-      const response = await this.apperClient.fetchRecords(this.tableName, params)
+const response = await this.apperClient.fetchRecords(this.tableName, params)
       
-      if (!response.success) {
-        console.error(response.message)
+      if (!response || !response.success) {
+        console.error("Failed to find user by mobile:", response?.message || "Unknown error")
         return null
       }
       
@@ -165,7 +180,7 @@ if (successfulRecords.length > 0) {
       if (error?.response?.data?.message) {
         console.error("Error finding user by mobile:", error.response.data.message)
       } else {
-        console.error(error)
+        console.error("Error finding user by mobile:", error.message || error)
       }
       return null
     }
@@ -225,12 +240,16 @@ if (successfulRecords.length > 0) {
     const name = userData.name_c || userData.name
     const mobile = userData.mobile_c || userData.mobile
     
-    if (!name || name.trim().length < 2) {
+if (!name || name.trim().length < 2) {
       errors.push("Name must be at least 2 characters long")
+    } else if (name.trim().length > 100) {
+      errors.push("Name cannot exceed 100 characters")
     }
     
-    if (!mobile || !/^[6-9]\d{9}$/.test(mobile)) {
-      errors.push("Please enter a valid 10-digit mobile number")
+    if (!mobile || mobile.trim().length === 0) {
+      errors.push("Mobile number is required")
+    } else if (!/^[6-9]\d{9}$/.test(mobile.trim())) {
+      errors.push("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9")
     }
     
     return {

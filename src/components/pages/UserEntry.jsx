@@ -42,14 +42,18 @@ const [formData, setFormData] = useState({
     
     try {
       // Validate form data
-      const validation = userService.validateUserData(formData)
-if (!validation.isValid) {
+const validation = userService.validateUserData(formData)
+      if (!validation.isValid) {
         const errorObj = {}
-        validation.errors.forEach((error, index) => {
-          if (error.includes("Name")) errorObj.name_c = error
-          if (error.includes("mobile")) errorObj.mobile_c = error
+        validation.errors.forEach((error) => {
+          if (error.toLowerCase().includes("name")) {
+            errorObj.name_c = error
+          } else if (error.toLowerCase().includes("mobile")) {
+            errorObj.mobile_c = error
+          }
         })
         setErrors(errorObj)
+        toast.error("Please fix the highlighted errors to continue")
         setIsLoading(false)
         return
       }
@@ -59,10 +63,15 @@ const user = await userService.createUser({
         name_c: formData.name_c.trim(),
         mobile_c: formData.mobile_c.trim()
       })
+      
+      if (!user) {
+        throw new Error("Failed to create or retrieve user account")
+      }
+      
       // Store user data in sessionStorage for quiz
       sessionStorage.setItem("currentUser", JSON.stringify(user))
       
-toast.success(`Welcome ${user.name_c || user.Name}! Let's begin the quiz! 🎉`)
+      toast.success(`Welcome ${user.name_c || user.Name}! Ready to test your knowledge? 🎉`)
       navigate("/quiz")
       
     } catch (error) {
