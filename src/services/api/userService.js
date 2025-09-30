@@ -1,5 +1,3 @@
-import React from "react";
-import Error from "@/components/ui/Error";
 class UserService {
   constructor() {
     const { ApperClient } = window.ApperSDK;
@@ -30,11 +28,10 @@ class UserService {
         apperPublicKey: publicKey
       });
     } catch (error) {
-      throw new Error(`Failed to initialize ApperClient: ${error.message}. Please verify your Project ID and Public Key are correct.`);
+throw new Error(`Failed to initialize ApperClient: ${error.message}. Please verify your Project ID and Public Key are correct.`);
     }
-    this.tableName = 'user_c'
+    this.tableName = 'user_c';
   }
-
   async getAllUsers() {
     try {
       const params = {
@@ -116,9 +113,9 @@ class UserService {
           mobile_c: userData.mobile_c || userData.mobile,
           created_at_c: new Date().toISOString()
         }]
-      }
+}
       
-const response = await this.apperClient.createRecord(this.tableName, params)
+      const response = await this.apperClient.createRecord(this.tableName, params)
       
       if (!response || !response.success) {
         const errorMessage = response?.message || "Failed to create user account"
@@ -167,15 +164,16 @@ const response = await this.apperClient.createRecord(this.tableName, params)
         throw new Error(error.message)
       } else {
         console.error("Error creating user in userService:", error)
-        throw new Error("An unexpected error occurred while creating your account")
+throw new Error("An unexpected error occurred while creating your account")
       }
     }
-async findUserByMobile(mobile) {
-    try {
+  }
+
+  async findUserByMobile(mobile) {
+try {
       // Ensure ApperClient is properly initialized with authentication
-if (!this.apperClient) {
+      if (!this.apperClient) {
         const { ApperClient } = window.ApperSDK;
-        
         // Validate environment variables before backup initialization
         const projectId = import.meta.env.VITE_APPER_PROJECT_ID;
         const publicKey = import.meta.env.VITE_APPER_PUBLIC_KEY;
@@ -302,9 +300,9 @@ if (!this.apperClient) {
   validateUserData(userData) {
     const errors = []
     const name = userData.name_c || userData.name
-    const mobile = userData.mobile_c || userData.mobile
+const mobile = userData.mobile_c || userData.mobile
     
-if (!name || name.trim().length < 2) {
+    if (!name || name.trim().length < 2) {
       errors.push("Name must be at least 2 characters long")
     } else if (name.trim().length > 100) {
       errors.push("Name cannot exceed 100 characters")
