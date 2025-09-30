@@ -4,10 +4,11 @@ import { AuthContext } from "../../App";
 import Quiz from "@/components/pages/Quiz";
 
 function Login() {
-  const { isInitialized } = useContext(AuthContext);
-
+const { isInitialized } = useContext(AuthContext);
+  
   useEffect(() => {
     if (isInitialized) {
+      // Show login UI in this component
       const { ApperUI } = window.ApperSDK;
       ApperUI.showLogin("#authentication");
     }

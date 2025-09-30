@@ -28,7 +28,7 @@ class UserService {
         apperPublicKey: publicKey
       });
     } catch (error) {
-throw new Error(`Failed to initialize ApperClient: ${error.message}. Please verify your Project ID and Public Key are correct.`);
+throw new Error(`Failed to initialize ApperClient: ${error.message}. Please verify your Project ID and Public Key are correct in .env file.`);
     }
     this.tableName = 'user_c';
   }
@@ -69,7 +69,7 @@ throw new Error(`Failed to initialize ApperClient: ${error.message}. Please veri
     try {
       const params = {
         fields: [
-          { field: { Name: "Name" } },
+{ field: { Name: "Name" } },
           { field: { Name: "name_c" } },
           { field: { Name: "mobile_c" } },
           { field: { Name: "created_at_c" } }
@@ -100,15 +100,15 @@ throw new Error(`Failed to initialize ApperClient: ${error.message}. Please veri
 
   async createUser(userData) {
     try {
-      // Check if user with this mobile already exists
-      const existingUser = await this.findUserByMobile(userData.mobile_c || userData.mobile)
+// Check if user with this mobile already exists
+      const existingUser = await this.findUserByMobile(userData.mobile_c || userData.mobile);
       if (existingUser) {
         return existingUser
       }
       
       const params = {
         records: [{
-          Name: userData.name_c || userData.name,
+Name: userData.name_c || userData.name,
           name_c: userData.name_c || userData.name,
           mobile_c: userData.mobile_c || userData.mobile,
           created_at_c: new Date().toISOString()
@@ -199,7 +199,7 @@ async findUserByMobile(mobile) {
 
       const params = {
         fields: [
-          { field: { Name: "Name" } },
+{ field: { Name: "Name" } },
           { field: { Name: "name_c" } },
           { field: { Name: "mobile_c" } },
           { field: { Name: "created_at_c" } }
@@ -252,7 +252,7 @@ async findUserByMobile(mobile) {
     try {
       const params = {
         records: [{
-          Id: parseInt(id),
+Id: parseInt(id),
           Name: userData.name_c || userData.name,
           name_c: userData.name_c || userData.name,
           mobile_c: userData.mobile_c || userData.mobile
@@ -300,8 +300,7 @@ async findUserByMobile(mobile) {
   validateUserData(userData) {
     const errors = []
     const name = userData.name_c || userData.name
-const mobile = userData.mobile_c || userData.mobile
-    
+const mobile = userData.mobile_c || userData.mobile;
     if (!name || name.trim().length < 2) {
       errors.push("Name must be at least 2 characters long")
     } else if (name.trim().length > 100) {

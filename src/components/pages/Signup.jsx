@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../App';
 
 function Signup() {
-  const { isInitialized } = useContext(AuthContext);
-
+const { isInitialized } = useContext(AuthContext);
+  
   useEffect(() => {
     if (isInitialized) {
+      // Show signup UI in this component
       const { ApperUI } = window.ApperSDK;
       ApperUI.showSignup("#authentication");
     }
