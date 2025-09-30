@@ -1,5 +1,5 @@
 import "@/index.css";
-import React from "react";
+import React, { createContext } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
@@ -14,12 +14,10 @@ import Layout from "@/components/organisms/Layout";
 export const AuthContext = createContext(null);
 
 function AppContent() {
-    });
-  }, []);
+  // Placeholder auth methods object
+  const authMethods = {};
 
-
-
-return (
+  return (
     <AuthContext.Provider value={authMethods}>
       <div className="min-h-screen bg-gradient-to-br from-floral-white to-cornsilk">
 <Routes>
