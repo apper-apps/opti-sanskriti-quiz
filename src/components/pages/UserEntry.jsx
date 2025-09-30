@@ -43,11 +43,11 @@ const [formData, setFormData] = useState({
     try {
       // Validate form data
       const validation = userService.validateUserData(formData)
-      if (!validation.isValid) {
+if (!validation.isValid) {
         const errorObj = {}
         validation.errors.forEach((error, index) => {
-          if (error.includes("Name")) errorObj.name = error
-          if (error.includes("mobile")) errorObj.mobile = error
+          if (error.includes("Name")) errorObj.name_c = error
+          if (error.includes("mobile")) errorObj.mobile_c = error
         })
         setErrors(errorObj)
         setIsLoading(false)

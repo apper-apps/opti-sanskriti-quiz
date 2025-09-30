@@ -113,19 +113,20 @@ class UserService {
           })
         }
         
-        if (successfulRecords.length > 0) {
+if (successfulRecords.length > 0) {
           return successfulRecords[0].data
         }
       }
       
-      throw new Error("Failed to create user")
+      throw new Error("No records were created successfully")
     } catch (error) {
       if (error?.response?.data?.message) {
-        console.error("Error creating user:", error.response.data.message)
+        console.error("Error creating user in userService:", error.response.data.message)
+        throw new Error(error.response.data.message)
       } else {
-        console.error(error)
+        console.error("Error creating user in userService:", error)
+        throw error.message ? new Error(error.message) : error
       }
-      throw new Error("Failed to create user")
     }
   }
 
