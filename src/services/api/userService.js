@@ -145,8 +145,17 @@ const response = await this.apperClient.createRecord(this.tableName, params)
     }
   }
 
-  async findUserByMobile(mobile) {
+async findUserByMobile(mobile) {
     try {
+      // Ensure ApperClient is properly initialized with authentication
+      if (!this.apperClient) {
+        const { ApperClient } = window.ApperSDK;
+        this.apperClient = new ApperClient({
+          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+        });
+      }
+
       const params = {
         fields: [
           { field: { Name: "Name" } },
@@ -167,10 +176,15 @@ const response = await this.apperClient.createRecord(this.tableName, params)
         }
       }
       
-const response = await this.apperClient.fetchRecords(this.tableName, params)
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
       
       if (!response || !response.success) {
-        console.error("Failed to find user by mobile:", response?.message || "Unknown error")
+        const errorMsg = response?.message || "Unknown error"
+        if (errorMsg.toLowerCase().includes('unauthorized')) {
+          console.error("Authentication failed - check Project ID and Public Key:", errorMsg)
+        } else {
+          console.error("Failed to find user by mobile:", errorMsg)
+        }
         return null
       }
       
@@ -178,7 +192,14 @@ const response = await this.apperClient.fetchRecords(this.tableName, params)
       return users.length > 0 ? users[0] : null
     } catch (error) {
       if (error?.response?.data?.message) {
-        console.error("Error finding user by mobile:", error.response.data.message)
+        const errorMsg = error.response.data.message
+        if (errorMsg.toLowerCase().includes('unauthorized')) {
+          console.error("Authentication error in user service - verify Apper credentials:", errorMsg)
+        } else {
+          console.error("Error finding user by mobile:", errorMsg)
+        }
+      } else if (error?.message?.toLowerCase().includes('unauthorized')) {
+        console.error("Authentication failed - ApperClient not properly initialized:", error.message)
       } else {
         console.error("Error finding user by mobile:", error.message || error)
       }
