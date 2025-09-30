@@ -1,10 +1,35 @@
 class UserService {
   constructor() {
-    const { ApperClient } = window.ApperSDK
-    this.apperClient = new ApperClient({
-      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    })
+const { ApperClient } = window.ApperSDK
+    
+    // Validate environment variables before initialization
+    const projectId = import.meta.env.VITE_APPER_PROJECT_ID;
+    const publicKey = import.meta.env.VITE_APPER_PUBLIC_KEY;
+    
+    if (!projectId) {
+      throw new Error('VITE_APPER_PROJECT_ID environment variable is not defined. Please check your .env file.');
+    }
+    
+    if (!publicKey) {
+      throw new Error('VITE_APPER_PUBLIC_KEY environment variable is not defined. Please check your .env file.');
+    }
+    
+    if (typeof projectId !== 'string' || projectId.trim() === '') {
+      throw new Error('VITE_APPER_PROJECT_ID must be a non-empty string. Current value: ' + projectId);
+    }
+    
+    if (typeof publicKey !== 'string' || publicKey.trim() === '') {
+      throw new Error('VITE_APPER_PUBLIC_KEY must be a non-empty string. Current value: ' + publicKey);
+    }
+    
+    try {
+      this.apperClient = new ApperClient({
+        apperProjectId: projectId,
+        apperPublicKey: publicKey
+      });
+    } catch (error) {
+      throw new Error(`Failed to initialize ApperClient: ${error.message}. Please verify your Project ID and Public Key are correct.`);
+    }
     this.tableName = 'user_c'
   }
 
@@ -148,12 +173,30 @@ const response = await this.apperClient.createRecord(this.tableName, params)
 async findUserByMobile(mobile) {
     try {
       // Ensure ApperClient is properly initialized with authentication
-      if (!this.apperClient) {
+if (!this.apperClient) {
         const { ApperClient } = window.ApperSDK;
-        this.apperClient = new ApperClient({
-          apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-          apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-        });
+        
+        // Validate environment variables before backup initialization
+        const projectId = import.meta.env.VITE_APPER_PROJECT_ID;
+        const publicKey = import.meta.env.VITE_APPER_PUBLIC_KEY;
+        
+        if (!projectId || !publicKey) {
+          throw new Error('Missing authentication credentials. VITE_APPER_PROJECT_ID and VITE_APPER_PUBLIC_KEY must be defined in environment variables.');
+        }
+        
+        if (typeof projectId !== 'string' || projectId.trim() === '' || 
+            typeof publicKey !== 'string' || publicKey.trim() === '') {
+          throw new Error('Invalid authentication credentials. Both Project ID and Public Key must be non-empty strings.');
+        }
+        
+        try {
+          this.apperClient = new ApperClient({
+            apperProjectId: projectId,
+            apperPublicKey: publicKey
+          });
+        } catch (error) {
+          throw new Error(`Failed to initialize ApperClient in backup method: ${error.message}. Please verify your credentials.`);
+        }
       }
 
       const params = {
