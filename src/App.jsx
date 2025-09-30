@@ -134,28 +134,24 @@ function AppContent() {
     );
   }
 
-  return (
 return (
     <AuthContext.Provider value={authMethods}>
       <div className="min-h-screen bg-gradient-to-br from-floral-white to-cornsilk">
-<Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/callback" element={<Callback />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
-        <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Homepage />} />
-          <Route path="entry" element={<UserEntry />} />
-          <Route path="quiz" element={<Quiz />} />
-          <Route path="results" element={<Results />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-        </Route>
-      </Routes>
-    </AuthContext.Provider>
-  );
-}
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
+          <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Homepage />} />
+            <Route path="entry" element={<UserEntry />} />
+            <Route path="quiz" element={<Quiz />} />
+            <Route path="results" element={<Results />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
+          </Route>
+        </Routes>
         <ToastContainer
           position="top-right"
           autoClose={3000}
