@@ -136,8 +136,8 @@ correctOption: currentQuestion.correct_option_c
       
       // Save quiz attempt
       const attemptData = {
-user_id_c: userData.Id,
-        user_name_c: userData.name_c || userData.name,
+user_id_c: parseInt(userData.Id) || userData.Id,
+        user_name_c: userData.name_c || userData.Name,
         score_c: finalScore,
         time_taken_c: totalTime,
         total_questions: questions.length
