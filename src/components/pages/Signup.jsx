@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
-import React from "react";
-import ApperIcon from "@/components/ApperIcon";
-import Quiz from "@/components/pages/Quiz";
+import { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../App';
 
 function Signup() {
+  const { isInitialized } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (isInitialized) {
+      const { ApperUI } = window.ApperSDK;
+      ApperUI.showSignup("#authentication");
+    }
+  }, [isInitialized]);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-floral-white to-cornsilk">
       <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-md border border-gold/20">
@@ -13,36 +21,25 @@ function Signup() {
           </div>
           <div className="flex flex-col gap-1 items-center justify-center">
             <div className="text-center text-lg xl:text-xl font-bold font-vesper text-saddle-brown">
-              No Account Creation Required
+              Create Account
             </div>
             <div className="text-center text-sm text-saddle-brown/70 font-hind">
-              Backend manages all user accounts automatically
+              Please create an account to continue
             </div>
           </div>
         </div>
-        
-        <div className="text-center space-y-4">
-          <div className="p-4 bg-gradient-to-r from-info/10 to-blue-100 rounded-xl border border-info/20">
-            <div className="flex items-center justify-center space-x-2 text-info mb-2">
-              <ApperIcon name="Database" className="w-5 h-5" />
-              <span className="font-medium font-hind">Automated User Management</span>
-            </div>
-            <p className="text-sm text-info/80 font-hind">
-              Our backend system automatically handles user registration and account management for you.
-            </p>
-          </div>
-          
-          <Link 
-            to="/entry" 
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-saffron to-gold text-white rounded-lg hover:shadow-lg transition-all duration-200 font-hind font-medium"
-          >
-            <ApperIcon name="Play" className="w-5 h-5" />
-            <span>Start Quiz Directly</span>
-          </Link>
+        <div id="authentication" />
+        <div className="text-center mt-4">
+          <p className="text-sm text-saddle-brown/60 font-hind">
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-saffron hover:text-gold transition-colors">
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Signup;
